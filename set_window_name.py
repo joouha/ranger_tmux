@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import atexit
-import os
 from subprocess import check_output
-
-import ranger.api
 
 from .util import tmux
 

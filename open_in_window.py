@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-
 import ranger.api
 
 HOOK_INIT_OLD = ranger.api.hook_init
