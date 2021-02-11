@@ -7,8 +7,8 @@ from ranger.container.settings import (
 )
 
 from . import cwd_sync, cwd_track, open_in_window, set_window_name, util
-from .cwd_sync import tmux_cwd_sync_now
-from .cwd_track import tmux_cwd_track_now
+from .cwd_sync import tmux_cwd_sync_now  # noqa F401
+from .cwd_track import tmux_cwd_track_now  # noqa F401
 
 MODULES = [open_in_window, set_window_name, cwd_sync, cwd_track]
 

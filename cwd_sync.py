@@ -45,4 +45,4 @@ def hook_init(fm, *args):
     fm.settings.signal_bind(f"setopt.{SETTING}", setting_signal_handler)
 
     if fm.settings.__getitem__(SETTING):
-        enable()
+        cd_signal_handler = fm.signal_bind("cd", cd_hook)

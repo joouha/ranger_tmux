@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from subprocess import CalledProcessError, check_output
+from subprocess import check_output
 
 import psutil
 
@@ -54,13 +54,11 @@ def select_shell_pane(ranger_pane):
         "\n"
     )
     other_panes = {*window_panes} - {ranger_pane}
-    n_other_panes = len(other_panes)
 
     # Check for a marked pane in this window
     has_marked_pane = int(
         tmux("display", "-p", "-F", "#{window_marked_flag}", "-t", ranger_pane)
     )
-
     if has_marked_pane:
         pane = tmux("display", "-p", "-t", "{marked}", "#{pane_id}")
         if pane in other_panes and pane != ranger_pane:
