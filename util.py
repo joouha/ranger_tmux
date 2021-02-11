@@ -83,6 +83,7 @@ def select_shell_pane(ranger_pane):
 
 
 def cd_pane(path, pane_id):
-    if tmux("display", "-p", "-t", pane_id, "-F", "#{pane_current_path}") != path:
+    pane_path = tmux("display", "-p", "-t", pane_id, "-F", "#{pane_current_path}")
+    if str(pane_path) != str(path):
         tmux("send-keys", "-t", pane_id, "C-c")
         tmux("send-keys", "-t", pane_id, f' cd "{path}"', "Enter")
