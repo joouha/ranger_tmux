@@ -6,11 +6,12 @@ from ranger.container.settings import (
     SIGNAL_PRIORITY_SYNC,
 )
 
-from . import cwd_sync, cwd_track, open_in_window, set_window_name, util
+from . import cwd_sync, cwd_track, dropdown, open_in_window, set_window_name, util
 from .cwd_sync import tmux_cwd_sync_now  # noqa F401
 from .cwd_track import tmux_cwd_track_now  # noqa F401
+from .dropdown import install_tmux_dropdown_shortcut  # noqa F401
 
-MODULES = [open_in_window, set_window_name, cwd_sync, cwd_track]
+MODULES = [open_in_window, set_window_name, cwd_sync, cwd_track, dropdown]
 
 HOOK_INIT_OLD = ranger.api.hook_init
 
