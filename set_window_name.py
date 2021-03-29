@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import atexit
-from subprocess import check_output
 
-from .util import tmux
+from . import util
 
 SETTING = "tmux_set_title"
 SHORTCUT_KEY = "i"
@@ -10,15 +9,13 @@ SHORTCUT_KEY = "i"
 
 def set_tmux_window_title(msg):
     """Set tmux's window format"""
-    tmux("set-option", "-p", "automatic-rename-format", msg)
+    util.tmux("set-option", "-p", "automatic-rename-format", msg)
 
 
 def hook_init(fm, *args):
 
     # Save tmux's original title format
-    original_format = check_output(
-        ["tmux", "show-options", "-gv", "automatic-rename-format"]
-    ).strip()
+    original_format = util.tmux("show-options", "-gv", "automatic-rename-format")
 
     def enable():
         # Set window name to "ranger" on this panel
