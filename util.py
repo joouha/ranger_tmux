@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-from subprocess import check_output
+import signal
+from subprocess import CalledProcessError, check_output
 
 import psutil
 
@@ -14,34 +15,26 @@ def check_tmux(fm):
 
 
 def tmux(*args):
-    return check_output(["tmux", *args]).decode("utf8").strip()
+    try:
+        return check_output(["tmux", *map(str, args)]).decode("utf8").strip()
+    except CalledProcessError:
+        return
 
 
 def get_ranger_pane():
-    # Find window with current instance of ranger in
+    # Find pane with current instance of ranger in
     ranger_pid = os.getpid()
-    panes = {
-        int(pid): pane_id
-        for pid, pane_id in [
-            info.split(",")
-            for info in tmux("list-panes", "-aF", "#{pane_pid},#{pane_id}").split("\n")
-        ]
-    }
-    for pid, pane_id in panes.items():
-        process = psutil.Process(pid)
-        if find_process(process, ranger_pid):
-            return pane_id
-
-
-def find_process(process, pid):
-    if process.pid == pid:
-        return True
-    else:
-        for child in process.children():
-            is_child = find_process(child, pid)
-            if is_child:
-                return is_child
-    return False
+    panes = tmux("list-panes", "-aF", "#{pane_pid},#{pane_id}")
+    if panes:
+        panes = {
+            int(pid): pane_id.strip()
+            for pid, pane_id in [info.split(",") for info in panes.split("\n")]
+        }
+        for pid, pane_id in panes.items():
+            if ranger_pid == pid or ranger_pid in [
+                x.pid for x in psutil.Process(pid).children(recursive=True)
+            ]:
+                return pane_id
 
 
 def select_shell_pane(ranger_pane):
@@ -81,7 +74,11 @@ def select_shell_pane(ranger_pane):
 
 
 def cd_pane(path, pane_id):
-    pane_path = tmux("display", "-p", "-t", pane_id, "-F", "#{pane_current_path}")
-    if str(pane_path) != str(path):
-        tmux("send-keys", "-t", pane_id, "C-c")
-        tmux("send-keys", "-t", pane_id, f' cd "{path}"', "Enter")
+    pane_process = psutil.Process(
+        int(tmux("display", "-p", "-t", pane_id, "-F", "#{pane_pid}"))
+    )
+    with pane_process.oneshot():
+        if not pane_process.children():
+            if pane_process.cwd() != str(path):
+                pane_process.send_signal(signal.SIGINT)
+                tmux("send-keys", "-t", pane_id, f' cd "{path}"', "Enter")
