@@ -3,8 +3,7 @@ import atexit
 
 from . import util
 
-SETTING = "tmux_set_title"
-SHORTCUT_KEY = "i"
+SETTINGS = {"tmux_set_title": {"key": "i", "type": bool, "default": True}}
 
 
 def set_tmux_window_title(msg):
@@ -12,7 +11,7 @@ def set_tmux_window_title(msg):
     util.tmux("set-option", "-p", "automatic-rename-format", msg)
 
 
-def hook_init(fm, *args):
+def tmux_set_title_init(fm, setting, *args):
 
     # Save tmux's original title format
     original_format = util.tmux("show-options", "-gv", "automatic-rename-format")
@@ -33,7 +32,8 @@ def hook_init(fm, *args):
         else:
             disable()
 
-    fm.settings.signal_bind(f"setopt.{SETTING}", setting_signal_handler)
+    setting = list(SETTINGS.keys())[0]
+    fm.settings.signal_bind(f"setopt.{setting}", setting_signal_handler)
 
-    if fm.settings.__getitem__(SETTING):
+    if fm.settings.__getitem__(setting):
         enable()

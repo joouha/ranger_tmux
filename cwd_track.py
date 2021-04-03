@@ -6,8 +6,7 @@ from ranger.api.commands import Command
 
 from . import util
 
-SETTING = "tmux_cwd_track"
-SHORTCUT_KEY = "t"
+SETTINGS = {"tmux_cwd_track": {"key": "t", "type": bool}}
 
 
 class tmux_cwd_track_now(Command):
@@ -47,7 +46,7 @@ class MonitorPane(Thread):
             time.sleep(1)
 
 
-def hook_init(fm, *args):
+def tmux_cwd_track_init(fm, setting, *args):
     """"""
 
     fm.execute_console('map xd eval fm.execute_console("tmux_cwd_track_now")')
@@ -72,7 +71,7 @@ def hook_init(fm, *args):
         else:
             disable()
 
-    fm.settings.signal_bind(f"setopt.{SETTING}", setting_signal_handler)
+    fm.settings.signal_bind(f"setopt.{setting}", setting_signal_handler)
 
-    if fm.settings.__getitem__(SETTING):
+    if fm.settings.__getitem__(setting):
         enable()

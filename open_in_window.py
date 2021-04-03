@@ -3,11 +3,10 @@ import ranger.api
 
 HOOK_INIT_OLD = ranger.api.hook_init
 
-SETTING = "tmux_open_in_window"
-SHORTCUT_KEY = "w"
+SETTINGS = {"tmux_open_in_window": {"key": "w", "type": bool, "default": True}}
 
 
-def hook_init(fm, *args):
+def tmux_open_in_window_init(fm, setting, *args):
     """Monkey-patch rifle's preprocessing function.
 
     This re-writes rifle commands, causing them to run in a new tmux window.
@@ -21,7 +20,7 @@ def hook_init(fm, *args):
     old_preprocessing_command = fm.rifle.hook_command_preprocessing
 
     def new_preprocessing_command(command):
-        if fm.settings.__getitem__(SETTING):
+        if fm.settings.__getitem__(setting):
             command = "tmux new-window -a {}".format(command)
         return old_preprocessing_command(command)
 

@@ -1,14 +1,22 @@
 # -*- coding: utf-8 -*-
+import sys
 from pathlib import Path
 
 from ranger.api.commands import Command
 
 from . import util
 
+SETTINGS = {
+    "tmux_dropdown_percent": {"type": int, "default": 60},
+    "tmux_dropdown_animate": {"type": bool, "default": True},
+    "tmux_dropdown_duration": {"type": int, "default": 100},
+}
+
 
 class install_tmux_dropdown_shortcut(Command):
     def execute(self):
-        util.tmux("display", "Installing tmux shortcut for drop-down ranger")
+
+        self.fm.notify("Installing drop-down shortcut in tmux")
 
         tmux_user_config_path = Path.home() / ".tmux.conf"
 
@@ -17,7 +25,12 @@ class install_tmux_dropdown_shortcut(Command):
             "Bspace",
             "run-shell",
             "-b",
-            str(Path(__file__).parent / "drop_ranger.sh"),
+            " ".join(
+                [
+                    sys.executable,
+                    str(Path(__file__).parent / "drop_ranger.py"),
+                ]
+            ),
         ]
         config_lines = [
             "#-#-# start of ranger_tmux config #-#-#",
@@ -55,9 +68,10 @@ class install_tmux_dropdown_shortcut(Command):
 
         # Run in current session
         util.tmux(*bind_key_cmd)
+        util.tmux("display", "Tmux shortcut for drop-down ranger installed")
 
 
-def hook_init(fm, *args):
+def init(fm, *args):
     fm.execute_console(
         'map xh eval fm.execute_console("install_tmux_dropdown_shortcut")'
     )

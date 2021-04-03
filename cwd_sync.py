@@ -3,8 +3,9 @@ from ranger.api.commands import Command
 
 from . import util
 
-SETTING = "tmux_cwd_sync"
-SHORTCUT_KEY = "s"
+SETTINGS = {
+    "tmux_cwd_sync": {"key": "s", "type": bool},
+}
 
 
 class tmux_cwd_sync_now(Command):
@@ -17,7 +18,7 @@ class tmux_cwd_sync_now(Command):
                 util.cd_pane(self.fm.thisdir.path, pane_id)
 
 
-def hook_init(fm, *args):
+def tmux_cwd_sync_init(fm, setting, *args):
     """"""
 
     fm.execute_console('map xc eval fm.execute_console("tmux_cwd_sync_now")')
@@ -42,7 +43,7 @@ def hook_init(fm, *args):
             if cd_signal_handler:
                 fm.signal_unbind(cd_signal_handler)
 
-    fm.settings.signal_bind(f"setopt.{SETTING}", setting_signal_handler)
+    fm.settings.signal_bind(f"setopt.{setting}", setting_signal_handler)
 
-    if fm.settings.__getitem__(SETTING):
+    if fm.settings.__getitem__(setting):
         cd_signal_handler = fm.signal_bind("cd", cd_hook)
