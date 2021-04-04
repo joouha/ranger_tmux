@@ -6,7 +6,10 @@ from ranger.api.commands import Command
 
 from . import util
 
-SETTINGS = {"tmux_cwd_track": {"key": "t", "type": bool}}
+SETTINGS = {
+    "tmux_cwd_track": {"key": "t", "type": bool},
+    "tmux_cwd_track_interval": {"type": float, "default": 0.5},
+}
 
 
 class tmux_cwd_track_now(Command):
@@ -43,7 +46,7 @@ class MonitorPane(Thread):
                 if self.last_path != new_path and new_path != self.fm.thisdir.path:
                     self.fm.cd(new_path)
                     self.last_path = new_path
-            time.sleep(1)
+            time.sleep(self.fm.settings.get("tmux_cwd_track_interval", 1))
 
 
 def tmux_cwd_track_init(fm, setting, *args):
