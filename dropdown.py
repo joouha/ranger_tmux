@@ -15,22 +15,27 @@ SETTINGS = {
 
 class install_tmux_dropdown_shortcut(Command):
     def execute(self):
+        def callback(answer):
+            if answer == "y":
+                self.install()
 
-        self.fm.notify("Installing drop-down shortcut in tmux")
+        self.fm.ui.console.ask(
+            "Are you sure you want to install the drop-down ranger key-binding in"
+            " ~/.tmux.conf? (y/n)",
+            callback,
+            "yn",
+        )
+
+    def install(self):
 
         tmux_user_config_path = Path.home() / ".tmux.conf"
-
+        dropscript = Path(__file__).parent / "drop_ranger.py"
         bind_key_cmd = [
             "bind-key",
             "Bspace",
             "run-shell",
             "-b",
-            " ".join(
-                [
-                    sys.executable,
-                    str(Path(__file__).parent / "drop_ranger.py"),
-                ]
-            ),
+            f'"{sys.executable} {dropscript}"',
         ]
         config_lines = [
             "#-#-# start of ranger_tmux config #-#-#",

@@ -48,6 +48,9 @@ def select_shell_pane(ranger_pane):
     )
     other_panes = {*window_panes} - {ranger_pane}
 
+    if not other_panes:
+        return
+
     # Check for a marked pane in this window
     has_marked_pane = int(
         tmux("display", "-p", "-F", "#{window_marked_flag}", "-t", ranger_pane)
