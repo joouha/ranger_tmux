@@ -1,8 +1,6 @@
 # ranger_tmux
 
-Tmux integration for ranger-fm.
-
-<img>
+Tmux integration for ranger
 
 ## Install
 
