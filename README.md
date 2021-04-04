@@ -16,7 +16,7 @@ To install the [drop-down ranger](#drop-down-file-manager) tmux keybinding, run 
 
 ## Features
 
-- Open files from ranger in a new tmux window
+- Open files from ranger in a new tmux window or pane
 - Make your terminal track ranger's directory
 - Make ranger track your terminal's directory
 - Set tmux window title to show ranger is running
@@ -33,6 +33,8 @@ The pane to be used for syncing or tracking is determined in the following order
 2. The currently selected pane;
 3. The last selected pane;
 4. The next pane.
+
+Ranger will only sync its working directory to another pane if the process running in another pane does not have any child processes. This prevents ranger typing `cd` commands if you have launched a text editor from the shell in the other pane.
 
 ### Drop-down ranger
 

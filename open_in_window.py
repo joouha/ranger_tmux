@@ -13,15 +13,18 @@ def tmux_open_in_window_init(fm, setting, *args):
 
     """
 
-    # Add shortcut to open selected file now
-    fm.execute_console('map xe shell tmux new-window -a "rifle %f"')
+    # Add shortcuts to open selected file in new window / pane
+    fm.execute_console('map xo shell tmux new-window -a "rifle %f"')
+    fm.execute_console('map xl shell tmux split-pane -h "rifle %f"')
+    fm.execute_console('map xp shell tmux split-pane -v "rifle %f"')
 
-    # Hook rifle's preprocessing command
-    old_preprocessing_command = fm.rifle.hook_command_preprocessing
+    # Hook rifle's post-processing command
+    old_postprocessing_command = fm.rifle.hook_command_postprocessing
 
-    def new_preprocessing_command(command):
+    def new_postprocessing_command(command):
         if fm.settings.__getitem__(setting):
-            command = "tmux new-window -a {}".format(command)
-        return old_preprocessing_command(command)
+            command = command.replace('"', r"\"").replace("$", r"\$")
+            command = 'tmux new-window -a "{}"'.format(command)
+        return old_postprocessing_command(command)
 
-    fm.rifle.hook_command_preprocessing = new_preprocessing_command
+    fm.rifle.hook_command_postprocessing = new_postprocessing_command
