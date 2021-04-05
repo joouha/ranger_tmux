@@ -5,23 +5,21 @@ import os
 import sys
 from pathlib import Path
 
-from ranger_tmux import util
-
 TMUX_CONFIG = [
     ["#-#-#", "start_of_ranger_tmux_config", "#-#-#"],
     ["bind-key", "Bspace", "run-shell", "-b", f"{sys.executable} -m ranger_tmux.drop"],
-    [
-        "bind-key",
-        "Tab",
-        "split-pane",
-        "-hbf",
-        "-l",
-        "30",
-        f"{util.get_ranger_script()}"
-        ' --cmd="set tmux_cwd_track True"'
-        ' --cmd="set viewmode multipane"'
-        " --cmd=tmux_cwd_track_now",
-    ],
+    # [
+    # "bind-key",
+    # "Tab",
+    # "split-pane",
+    # "-hbf",
+    # "-l",
+    # "30",
+    # f"{util.get_ranger_script()}"
+    # ' --cmd="set tmux_cwd_track True"'
+    # ' --cmd="set viewmode multipane"'
+    # " --cmd=tmux_cwd_track_now",
+    # ],
     ["#-#-#", "end_of_ranger_tmux_config", "#-#-#"],
 ]
 
