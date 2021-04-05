@@ -7,7 +7,7 @@ Tmux integration for ranger
 To install this plugin, clone the respository into ranger's plugins folder:
 
 ```
-pip install https://github.com/joouha/ranger_tmux
+pip install git+https://github.com/joouha/ranger_tmux
 python -m ranger_tmux install
 ```
 
@@ -71,11 +71,12 @@ This plugin adds several settings to ranger:
 | `tmux_dropdown_animate`   | bool  | True    | When True, dropped-down ranger will grow / shrink when summoned                          |
 | `tmux_dropdown_duration`  | float | 100     | Drop-down animation time in miliseconds                                                  |
 
-The default values can be modified by setting them in `~/.config/ranger/rc.conf`:
+The default values can be modified by setting them in `~/.config/ranger/rc.conf`, e.g.:
 
 ```
 set tmux_cwd_sync true
 set tmux_cwd_track true
 set tmux_set_title true
 set tmux_open_in_window true
+set tmux_dropdown_percent 60
 ```
