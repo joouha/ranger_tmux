@@ -1,10 +1,11 @@
 # ranger_tmux
 
-<img src="https://i.postimg.cc/SRz46CNH/output.gif" align="right"> Tmux integration for ranger
+<img src="https://i.postimg.cc/SRz46CNH/output.gif" align="right" width=200>
+Tmux integration for ranger
 
 ## Install
 
-To install this plugin, clone the respository into ranger's pligins folder:
+To install this plugin, clone the respository into ranger's plugins folder:
 
 ```
 pip install https://github.com/joouha/ranger_tmux
