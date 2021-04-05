@@ -37,15 +37,14 @@ Ranger will only sync its working directory to another pane if the process runni
 
 ### Drop-down ranger
 
-Running the `:install_tmux_dropdown_shortcut` command in ranger (or typing the `xh` shortcut) will install add a keybinding to your tmux configuration in `~/.tmux.conf`, which enables ranger to act as a drop-down filemanager in tmux. A drop-down ranger pane can be summoned by pressing `prefix` (`Ctrl+b`) followed by `backspace`. When drop-down ranger is summoned, the current tmux window is split and a new pane running ranger is created at the top of the window.
+When installing the plugin, you will be asked if you want to install a key-binding in `~/.tmux.conf` for drop-down ranger. This allows you to toggle ranger in a drop-down tmux pane in the current window. This can be run manually by running `python -m ranger_tmux.drop` in a tmux session.
 
-The default key-binding installed is `prefix` `backspace`, but this can be changed by editing the lines added to `~/.tmux.conf`.
+The key binding can be installed by running `python -m ranger_tmux --tmux install`, or by running the `:install_tmux_dropdown_shortcut` command in ranger (or typing the `xh` shortcut). The default key-binding installed is `prefix, backspace`, but this can be changed by editing the lines added to `~/.tmux.conf`.
 
 ## Shortcut keys
 
 | Key Sequence | Command                                                                           |
 | ------------ | --------------------------------------------------------------------------------- |
-| `xh`         | Adds the dropdown shortcut in `~/.tmux.conf`                                      |
 | `xc`         | Change the current working directory in the other pane to the directory in ranger |
 | `xd`         | Change ranger's current directory to the directory of the other pane              |
 | `xs`         | Toggle syncing of ranger's current directory to the other pane                    |
@@ -55,6 +54,7 @@ The default key-binding installed is `prefix` `backspace`, but this can be chang
 | `xe`         | Open the selected file with rifle in a new tmux window                            |
 | `x\|`        | Split ranger's current tmux pane vertially                                        |
 | `x-`         | Split ranger's current tmux pane horizontally                                     |
+| `xh`         | Adds the dropdown shortcut to `~/.tmux.conf`                                      |
 
 ## Settings
 
