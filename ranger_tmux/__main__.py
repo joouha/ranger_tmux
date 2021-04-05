@@ -69,6 +69,15 @@ def tmux_keybindings(install=True):
     return TMUX_CONFIG[1:-1]
 
 
+def confirm_choice(query, options=("y", "n")):
+    while True:
+        confirm = input(f"{query} ({'/'.join(options)})\n")
+        if confirm.lower() in options:
+            return confirm
+        else:
+            print("Invalid Option. Please Enter a Valid Option.")
+
+
 def install(args):
     print("Installing ranger_tmux plugin")
     print(f"- Plugin installation located at `{args.plugin_script_path}`")
@@ -78,7 +87,18 @@ def install(args):
     print(f"- Creating symlink at `{args.ranger_plugin_path}`")
     args.ranger_plugin_path.symlink_to(args.plugin_script_path)
 
-    if args.tmux:
+    if args.tmux is None:
+        tmux = (
+            confirm_choice(
+                "Do you want to install a key-binding for"
+                " drop-down ranger in `~/.tmux.conf`?",
+                ("y", "n"),
+            )
+            == "y"
+        )
+    else:
+        tmux = args.tmux
+    if tmux:
         print("Installing tmux key-bindings")
         tmux_keybindings(install=True)
 
@@ -107,7 +127,7 @@ def main():
     parser = argparse.ArgumentParser(description="Install ranger_tmux plugin")
     parser.add_argument(
         "--tmux",
-        default=True,
+        default=None,
         action=argparse.BooleanOptionalAction,
         help="Install/uninstall key-bindings for tmux",
     )
