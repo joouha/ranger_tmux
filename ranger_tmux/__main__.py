@@ -26,7 +26,7 @@ TMUX_CONFIG = [
 ]
 
 
-def install_tmux_keybindings():
+def tmux_keybindings(install=True):
 
     tmux_user_config_path = Path.home() / ".tmux.conf"
     tmux_config_lines = [
@@ -57,7 +57,8 @@ def install_tmux_keybindings():
                 break
         # Merge in the new config
         new_lines += old_lines[:start_line]
-        new_lines += tmux_config_lines
+        if install:
+            new_lines += tmux_config_lines
         new_lines += old_lines[end_line + 1 :]
     else:
         # No config at all, just use ours
@@ -81,7 +82,7 @@ def install(args):
 
     if args.tmux:
         print("Installing tmux key-bindings")
-        install_tmux_keybindings()
+        tmux_keybindings(install=True)
 
     print("Installation complete")
 
@@ -91,6 +92,10 @@ def uninstall(args):
     if args.ranger_plugin_path.exists():
         print(f"- Removing existing symlink `{args.ranger_plugin_path}`")
         args.ranger_plugin_path.unlink(missing_ok=True)
+
+    if args.tmux:
+        print("Uninstalling tmux key-bindings")
+        tmux_keybindings(install=False)
 
     print("Uninstallation complete")
 
@@ -108,7 +113,9 @@ def main():
         action=argparse.BooleanOptionalAction,
         help="Install/uninstall key-bindings for tmux",
     )
-    subparsers = parser.add_subparsers(help="Command to run")
+    subparsers = parser.add_subparsers(
+        help="Command to run", dest="command", required=True
+    )
     parser_install = subparsers.add_parser("install", help="Install plugin")
     parser_install.set_defaults(func=install)
     parser_uninstall = subparsers.add_parser("uninstall", help="Unnstall plugin")
