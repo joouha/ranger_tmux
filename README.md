@@ -1,6 +1,6 @@
 # ranger_tmux
 
-Tmux integration for ranger
+<img src="https://i.postimg.cc/SRz46CNH/output.gif" align="right"> Tmux integration for ranger
 
 ## Install
 
