@@ -69,7 +69,7 @@ This plugin adds several settings to ranger:
 | `tmux_set_title`          | bool  | True    | When True, the tumx window will be renamed to "ranger" when ranger is running            |
 | `tmux_dropdown_percent`   | int   | 60      | The height of the pane created when the drop-down tmux key-binding is installed and used |
 | `tmux_dropdown_animate`   | bool  | True    | When True, dropped-down ranger will grow / shrink when summoned                          |
-| `tmux_dropdown_duration`  | float | 500     | Drop-down animation time in miliseconds                                                  |
+| `tmux_dropdown_duration`  | float | 100     | Drop-down animation time in miliseconds                                                  |
 
 The default values can be modified by setting them in `~/.config/ranger/rc.conf`:
 
