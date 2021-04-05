@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ranger.api.commands import Command
 
-from ranger_tmux.__main__ import install_tmux_keybindings
+from ranger_tmux.__main__ import tmux_keybindings
 
 from . import util
 
@@ -16,7 +16,7 @@ class install_tmux_dropdown_shortcut(Command):
     def execute(self):
         def callback(answer):
             if answer == "y":
-                tmux_cmds = install_tmux_keybindings()
+                tmux_cmds = tmux_keybindings(install=True)
                 # Add shortcut to current session
                 for cmd in tmux_cmds:
                     util.tmux(*cmd)
