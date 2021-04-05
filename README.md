@@ -13,7 +13,7 @@ python -m ranger_tmux install
 
 ## Features
 
-<img src="https://i.postimg.cc/SRz46CNH/output.gif" align="right" width=200>
+<img src="https://i.postimg.cc/SRz46CNH/output.gif" align="right" width=300>
 
 - Open files from ranger in a new tmux window or pane
 - Make your terminal track ranger's directory
