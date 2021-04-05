@@ -10,22 +10,11 @@ from ranger.core.fm import FM
 from ranger.core.main import parse_arguments
 from ranger.core.shared import FileManagerAware, SettingsAware
 
-# Initiate ranger just enough to allow us to access the settings
-ranger.args = parse_arguments()
-fm = FM()
-SettingsAware.settings_set(Settings())
-FileManagerAware.fm_set(fm)
-ranger.core.main.load_settings(fm, clean=False)
-
-# An added bonus is that plugins are loaded by the above
-# This means we can import from this plugin
-from plugins.ranger_tmux import util  # noqa E402
+from ranger_tmux import util
 
 
-def animated_resize(pane_id, target_perc):
+def animated_resize(pane_id, target_perc, duration=200):
     """Animates the resizing a tmux pane."""
-    # lines = fm.settings.get("tmux_dropdown_animate_lines")
-    duration = fm.settings.get("tmux_dropdown_duration")
     pane_height = int(util.tmux("display", "-t", "{top}", "-p", "#{pane_height}"))
     window_height = int(util.tmux("display", "-p", "#{window_height}"))
     target_height = int(target_perc / 100 * window_height)
@@ -41,22 +30,32 @@ def animated_resize(pane_id, target_perc):
 
 def main():
 
+    ranger_script_path = util.get_ranger_script()
+
+    # Initiate ranger just enough to allow us to access the settings
+    ranger.args = parse_arguments()
+    fm = FM()
+    SettingsAware.settings_set(Settings())
+    FileManagerAware.fm_set(fm)
+    ranger.core.main.load_settings(fm, clean=False)
+
     # Check we're actually in tmux
     if not util.check_tmux(fm):
         sys.exit()
 
     # Check if we need to animate the drop
     animate = fm.settings.get("tmux_dropdown_animate")
+    duration = fm.settings.get("tmux_dropdown_duration")
 
     pane_id, command, pid = util.tmux(
         "display", "-t", "{top}", "-p", "#{pane_id}|#{pane_start_command}|#{pane_pid}"
     ).split("|")
 
     # Ranger is open - we will close it
-    if command == "ranger":
+    if command == str(ranger_script_path):
         # Animate close if wanted
         if animate:
-            animated_resize(pane_id, 0)
+            animated_resize(pane_id, 0, duration)
         # Get a handel on ranger
         process = psutil.Process(int(pid))
         # Send interupt to ranger to cancel any unfinished command entry
@@ -90,11 +89,12 @@ def main():
             "{top}",
             "-l",
             initial_size,
-            "ranger",
+            # " ".join([sys.executable, "-m", "ranger.main"]),
+            ranger_script_path,
         )
         # Animate open if wanted
         if animate:
-            animated_resize(pane_id, percent)
+            animated_resize(pane_id, percent, duration)
 
 
 if __name__ == "__main__":
