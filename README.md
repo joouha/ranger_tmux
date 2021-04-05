@@ -7,10 +7,9 @@ Tmux integration for ranger
 To install this plugin, clone the respository into ranger's pligins folder:
 
 ```
-git clone https://github.com/joouha/ranger_tmux ~/.config/ranger/plugins/ranger_tmux
+pip install https://github.com/joouha/ranger_tmux
+python -m ranger_tmux install
 ```
-
-To install the [drop-down ranger](#drop-down-file-manager) tmux keybinding, run ranger in a tmux session and type `xh`.
 
 ## Features
 
