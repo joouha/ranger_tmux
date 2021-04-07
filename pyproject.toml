@@ -1,9 +1,12 @@
 [tool.poetry]
-name = "ranger_tmux"
+name = "ranger-plugin-tmux"
 version = "0.1.0"
 description = "Tmux integration for ranger"
 authors = ["joouha <12154190+joouha@users.noreply.github.com>"]
-license = "GPL3"
+license = "GPL-3.0-or-later"
+packages = [
+    { include = "ranger_plugins" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
