@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import importlib.metadata
 import os
+import shutil
 import signal
 from subprocess import CalledProcessError, check_output
 
@@ -8,11 +9,12 @@ import psutil
 
 
 def get_ranger_script():
-    ranger_script_paths = [
-        path for path in importlib.metadata.files("ranger-fm") if path.name == "ranger"
-    ]
-    if ranger_script_paths:
-        return ranger_script_paths[0].locate().resolve()
+    scripts = importlib.metadata.files("ranger-fm")
+    if scripts is not None:
+        ranger_script_paths = [path for path in scripts if path.name == "ranger"]
+        if ranger_script_paths:
+            return ranger_script_paths[0].locate().resolve()
+    return shutil.which("ranger")
 
 
 def check_tmux(fm):
