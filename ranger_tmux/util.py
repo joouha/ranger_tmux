@@ -2,12 +2,50 @@
 import os
 import shutil
 import signal
+import time
 from subprocess import CalledProcessError, check_output
 
 try:
     import importlib_metadata
 except ImportError:
     import importlib.metadata as importlib_metadata
+
+TMUX_PANE_TARGETS = {"height": "{top}", "width": "{left}"}
+TMUX_DIRECTION_FLAGS = {
+    "height": {1: "-D", -1: "-U"},
+    "width": {1: "-R", -1: "-L"},
+}
+TMUX_DIMENSION_FLAGS = {"width": "-x", "height": "-y"}
+
+
+def animated_resize(pane_id, target_size, dim="height", duration=500, lines=2):
+    """Animates the resizing of a tmux pane."""
+    pane_size = int(
+        tmux("display", "-t", TMUX_PANE_TARGETS[dim], "-p", f"#{{pane_{dim}}}")
+    )
+    window_size = int(tmux("display", "-p", f"#{{window_{dim}}}"))
+
+    size = int("".join([x for x in str(target_size) if x.isdigit()]))
+    if str(target_size).endswith("%"):
+        size = int(size / 100 * window_size)
+    size = max(size, 2)
+
+    direction = (pane_size < size) * 2 - 1
+    frames = max(1, abs(pane_size - size) // lines - 1)
+    timeout = duration / 1000 / frames
+
+    while abs(size - pane_size) > 0:
+        change = min(lines, abs(size - pane_size))
+        tmux(
+            "resize-pane",
+            TMUX_DIRECTION_FLAGS[dim][direction],
+            "-t",
+            pane_id,
+            abs(change),
+        )
+        pane_size += change * direction
+        time.sleep(timeout)
+    tmux("resize-pane", "-t", pane_id, TMUX_DIMENSION_FLAGS[dim], target_size)
 
 
 def get_ranger_script():

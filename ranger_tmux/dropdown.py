@@ -6,9 +6,10 @@ from ranger_tmux.__main__ import tmux_keybindings
 from . import util
 
 SETTINGS = {
-    "tmux_dropdown_percent": {"type": int, "default": 60},
-    "tmux_dropdown_animate": {"type": bool, "default": True},
-    "tmux_dropdown_duration": {"type": int, "default": 100},
+    "tmux_dropdown_size": {"type": str, "default": "60%"},
+    "tmux_panel_size": {"type": str, "default": "30"},
+    "tmux_animate": {"type": bool, "default": True},
+    "tmux_animation_duration": {"type": int, "default": 200},
 }
 
 
