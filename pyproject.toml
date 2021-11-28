@@ -2,8 +2,8 @@
 name = "ranger_tmux"
 version = "0.1.0"
 description = "Tmux integration for ranger"
-authors = ["joouha <12154190+joouha@users.noreply.github.com>"]
-license = "GPL3"
+authors = ["Josiah Outram Halstead <josiah@halstead.email>"]
+license = "MIT"
 classifiers = [
     "Environment :: Plugin",
     "Framework :: Ranger",
