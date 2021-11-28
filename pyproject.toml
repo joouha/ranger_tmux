@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "Tmux integration for ranger"
 authors = ["joouha <12154190+joouha@users.noreply.github.com>"]
 license = "GPL3"
+classifiers = [
+    "Environment :: Plugin",
+    "Framework :: Ranger",
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -19,3 +23,6 @@ isort = "^5.8.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.plugins."ranger.plugins"]
+"ranger_tmux" = "ranger_tmux.plugin"
