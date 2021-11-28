@@ -5,8 +5,6 @@ import shutil
 import signal
 from subprocess import CalledProcessError, check_output
 
-import psutil
-
 
 def get_ranger_script():
     scripts = importlib.metadata.files("ranger-fm")
@@ -33,6 +31,8 @@ def tmux(*args):
 
 
 def get_ranger_pane():
+    import psutil
+
     # Find pane with current instance of ranger in
     ranger_pid = os.getpid()
     panes = tmux("list-panes", "-aF", "#{pane_pid},#{pane_id}")
@@ -88,6 +88,8 @@ def select_shell_pane(ranger_pane):
 
 
 def cd_pane(path, pane_id):
+    import psutil
+
     pane_process = psutil.Process(
         int(tmux("display", "-p", "-t", pane_id, "-F", "#{pane_pid}"))
     )
