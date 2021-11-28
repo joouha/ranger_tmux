@@ -58,15 +58,14 @@ def tmux_cwd_track_init(fm, setting, *args):
     ranger_pane = util.get_ranger_pane()
     tmux_cwd_track_now.ranger_pane = ranger_pane
 
-    pane_monitor_thread = None
+    non_local = {"pane_monitor_thread": None}
 
     def enable():
-        nonlocal pane_monitor_thread
-        pane_monitor_thread = MonitorPane(fm, ranger_pane)
+        non_local["pane_monitor_thread"] = MonitorPane(fm, ranger_pane)
 
     def disable():
-        if pane_monitor_thread:
-            pane_monitor_thread.stopped = True
+        if non_local["pane_monitor_thread"]:
+            non_local["pane_monitor_thread"].stopped = True
 
     def setting_signal_handler(signal):
         if signal.value:
@@ -74,7 +73,7 @@ def tmux_cwd_track_init(fm, setting, *args):
         else:
             disable()
 
-    fm.settings.signal_bind(f"setopt.{setting}", setting_signal_handler)
+    fm.settings.signal_bind("setopt.{}".format(setting), setting_signal_handler)
 
     if fm.settings.__getitem__(setting):
         enable()

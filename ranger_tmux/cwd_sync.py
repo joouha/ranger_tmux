@@ -27,7 +27,7 @@ def tmux_cwd_sync_init(fm, setting, *args):
     ranger_pane = util.get_ranger_pane()
     tmux_cwd_sync_now.ranger_pane = ranger_pane
 
-    cd_signal_handler = None
+    non_local = {"cd_signal_handler": None}
 
     def cd_hook(signal):
         if "new" in signal:
@@ -36,14 +36,13 @@ def tmux_cwd_sync_init(fm, setting, *args):
                 util.cd_pane(signal.new, pane_id)
 
     def setting_signal_handler(signal):
-        nonlocal cd_signal_handler
         if signal.value:
-            cd_signal_handler = fm.signal_bind("cd", cd_hook)
+            non_local["cd_signal_handler"] = fm.signal_bind("cd", cd_hook)
         else:
-            if cd_signal_handler:
-                fm.signal_unbind(cd_signal_handler)
+            if non_local["cd_signal_handler"]:
+                fm.signal_unbind(non_local["cd_signal_handler"])
 
-    fm.settings.signal_bind(f"setopt.{setting}", setting_signal_handler)
+    fm.settings.signal_bind("setopt.{}".format(setting), setting_signal_handler)
 
     if fm.settings.__getitem__(setting):
-        cd_signal_handler = fm.signal_bind("cd", cd_hook)
+        non_local["cd_signal_handler"] = fm.signal_bind("cd", cd_hook)

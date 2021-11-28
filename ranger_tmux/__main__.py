@@ -1,13 +1,29 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import argparse
-import importlib.resources
 import os
 import sys
-from pathlib import Path
+
+try:
+    from pathlib import Path
+except ImportError:
+    from pathlib2 import Path
+
+try:
+    import importlib.resources as importlib_resources
+except ImportError:
+    import importlib_resources
 
 TMUX_CONFIG = [
     ["#-#-#", "start_of_ranger_tmux_config", "#-#-#"],
-    ["bind-key", "Bspace", "run-shell", "-b", f"{sys.executable} -m ranger_tmux.drop"],
+    [
+        "bind-key",
+        "Bspace",
+        "run-shell",
+        "-b",
+        "{} -m ranger_tmux.drop".format(sys.executable),
+    ],
     # [
     # "bind-key",
     # "Tab",
@@ -31,7 +47,7 @@ def tmux_keybindings(install=True):
         " ".join(
             [
                 # Quote command components if they contain spaces
-                (f"'{cmd}'" if " " in cmd else str(cmd))
+                ("'{}'".format(cmd) if " " in cmd else str(cmd))
                 for cmd in line
             ]
         )
@@ -40,7 +56,7 @@ def tmux_keybindings(install=True):
     new_lines = []
     if tmux_user_config_path.exists():
         # Read existing lines
-        with open(tmux_user_config_path, "r") as f:
+        with open(str(tmux_user_config_path), "r") as f:
             old_lines = [x.strip() for x in f.readlines()]
         # Search for tmux_ranger config in tmux config
         start_line = len(old_lines) + 1
@@ -63,7 +79,7 @@ def tmux_keybindings(install=True):
         new_lines += tmux_config_lines
 
     # Write the updated tmux configuration file
-    with open(tmux_user_config_path, "w") as f:
+    with open(str(tmux_user_config_path), "w") as f:
         f.write("\n".join(new_lines) + "\n")
 
     return TMUX_CONFIG[1:-1]
@@ -71,7 +87,7 @@ def tmux_keybindings(install=True):
 
 def confirm_choice(query, options=("y", "n")):
     while True:
-        confirm = input(f"{query} ({'/'.join(options)})\n")
+        confirm = input("{} ({})\n".format(query, "/".join(options)))
         if confirm.lower() in options:
             return confirm
         else:
@@ -80,11 +96,12 @@ def confirm_choice(query, options=("y", "n")):
 
 def install(args):
     print("Installing ranger_tmux plugin")
-    print(f"- Plugin installation located at `{args.plugin_script_path}`")
+    print("- Plugin installation located at `{}`".format(args.plugin_script_path))
     if args.ranger_plugin_path.exists():
         print("- Removing existing symlink")
-        args.ranger_plugin_path.unlink(missing_ok=True)
-    print(f"- Creating symlink at `{args.ranger_plugin_path}`")
+        if args.ranger_plugin_path.exists():
+            args.ranger_plugin_path.unlink()
+    print("- Creating symlink at `{}`".format(args.ranger_plugin_path))
     args.ranger_plugin_path.symlink_to(args.plugin_script_path)
 
     if args.tmux is None:
@@ -108,8 +125,9 @@ def install(args):
 def uninstall(args):
     print("Uninstalling ranger_tmux plugin")
     if args.ranger_plugin_path.exists():
-        print(f"- Removing existing symlink `{args.ranger_plugin_path}`")
-        args.ranger_plugin_path.unlink(missing_ok=True)
+        print("- Removing existing symlink `{}`".format(args.ranger_plugin_path))
+        if args.ranger_plugin_path.exists():
+            args.ranger_plugin_path.unlink()
 
     if args.tmux:
         print("Uninstalling tmux key-bindings")
@@ -127,12 +145,18 @@ def main():
     parser = argparse.ArgumentParser(description="Install ranger_tmux plugin")
     parser.add_argument(
         "--tmux",
-        default=None,
-        action=argparse.BooleanOptionalAction,
+        default=True,
+        action="store_true",
+        help="Install/uninstall key-bindings for tmux",
+    )
+    parser.add_argument(
+        "--no-tmux",
+        dest="tmux",
+        action="store_false",
         help="Install/uninstall key-bindings for tmux",
     )
     subparsers = parser.add_subparsers(
-        help="Command to run", dest="command", required=True
+        help="Command to run", dest="command"  # , required=True
     )
     parser_install = subparsers.add_parser("install", help="Install plugin")
     parser_install.set_defaults(func=install)
@@ -144,7 +168,7 @@ def main():
     parser.add_argument(
         "--plugin_script_path",
         help=argparse.SUPPRESS,
-        default=importlib.resources.files("ranger_tmux").joinpath("plugin.py"),
+        default=importlib_resources.files("ranger_tmux").joinpath("plugin.py"),
     )
     parser.add_argument(
         "--ranger_plugin_path",

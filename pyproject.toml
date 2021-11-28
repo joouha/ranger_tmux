@@ -11,15 +11,18 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=2.7 <3 || >=3.6"
 ranger-fm = "^1.9.3"
 psutil = "^5.8.0"
+pathlib2 = {version = "^2.3.6", python = ">2.7 <3"}
+importlib-resources = {version = ">=3.3.1", python = ">=2.7,<3 || <3.7"}
+importlib-metadata = {version = ">=2.1.2", python = ">=2.7,<3 || <3.8"}
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.9.0"
-black = "^20.8b1"
-flake8-black = "^0.2.1"
-isort = "^5.8.0"
+flake8 = "^3.9.2"
+black = {version = "^20.8b1", python = ">=3.6"}
+flake8-black = "^0.2.3"
+isort = ">=4.3.21"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

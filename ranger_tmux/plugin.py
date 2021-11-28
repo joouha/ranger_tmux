@@ -30,15 +30,16 @@ for mod in MODULES:
     if hasattr(mod, "SETTINGS"):
         for setting, info in mod.SETTINGS.items():
             ALLOWED_SETTINGS[setting] = info.get("type", bool)
-            if value := info.get("default"):
+            value = info.get("default")
+            if value:
                 ranger.fm.settings._raw_set(setting, value)
             ranger.fm.settings.signal_bind(
-                f"setopt.{setting}",
+                "setopt.{}".format(setting),
                 ranger.fm.settings._sanitize,
                 priority=SIGNAL_PRIORITY_SANITIZE,
             )
             ranger.fm.settings.signal_bind(
-                f"setopt.{setting}",
+                "setopt.{}".format(setting),
                 ranger.fm.settings._raw_set_with_signal,
                 priority=SIGNAL_PRIORITY_SYNC,
             )
@@ -54,10 +55,11 @@ def hook_init(fm):
             # Add key-bindings for module
             if hasattr(mod, "SETTINGS"):
                 for setting, info in mod.SETTINGS.items():
-                    if hasattr(mod, f"{setting}_init"):
-                        getattr(mod, f"{setting}_init")(fm, setting, MODULES)
-                    if key := info.get("key"):
-                        fm.execute_console(f"map x{key} set {setting}!")
+                    if hasattr(mod, "{}_init".format(setting)):
+                        getattr(mod, "{}_init".format(setting))(fm, setting, MODULES)
+                    key = info.get("key")
+                    if key:
+                        fm.execute_console("map x{} set {}!".format(key, setting))
             if hasattr(mod, "init"):
                 mod.init(fm, MODULES)
 

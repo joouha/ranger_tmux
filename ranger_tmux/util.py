@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
-import importlib.metadata
 import os
 import shutil
 import signal
 from subprocess import CalledProcessError, check_output
 
+try:
+    import importlib.metadata as importlib_metadata
+except ImportError:
+    import importlib_metadata
+
 
 def get_ranger_script():
-    scripts = importlib.metadata.files("ranger-fm")
+    scripts = importlib_metadata.files("ranger-fm")
     if scripts is not None:
         ranger_script_paths = [path for path in scripts if path.name == "ranger"]
         if ranger_script_paths:
@@ -25,7 +29,7 @@ def check_tmux(fm):
 
 def tmux(*args):
     try:
-        return check_output(["tmux", *map(str, args)]).decode("utf8").strip()
+        return check_output(["tmux"] + list(map(str, args))).decode("utf8").strip()
     except CalledProcessError:
         return
 
@@ -57,7 +61,7 @@ def select_shell_pane(ranger_pane):
     window_panes = tmux("list-panes", "-F", "#{pane_id}", "-t", ranger_window).split(
         "\n"
     )
-    other_panes = {*window_panes} - {ranger_pane}
+    other_panes = set(window_panes) - set(ranger_pane)
 
     if not other_panes:
         return
@@ -97,4 +101,4 @@ def cd_pane(path, pane_id):
         if not pane_process.children():
             if pane_process.cwd() != str(path):
                 pane_process.send_signal(signal.SIGINT)
-                tmux("send-keys", "-t", pane_id, f' cd "{path}"', "Enter")
+                tmux("send-keys", "-t", pane_id, ' cd "{}"'.format(path), "Enter")

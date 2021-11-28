@@ -24,7 +24,13 @@ def tmux_set_title_init(fm, setting, *args):
 
     def disable():
         set_tmux_window_title(original_format)
-        atexit.unregister(disable)
+        if hasattr(atexit, "unregister"):
+            atexit.unregister(disable)
+        else:
+            # Python 2 version of above
+            for i, handler in enumerate(atexit._exithandlers):
+                if handler == (disable, (), {}):
+                    del atexit._exithandlers[i]
 
     def setting_signal_handler(signal):
         if signal.value:
@@ -33,7 +39,7 @@ def tmux_set_title_init(fm, setting, *args):
             disable()
 
     setting = list(SETTINGS.keys())[0]
-    fm.settings.signal_bind(f"setopt.{setting}", setting_signal_handler)
+    fm.settings.signal_bind("setopt.{}".format(setting), setting_signal_handler)
 
     if fm.settings.__getitem__(setting):
         enable()
