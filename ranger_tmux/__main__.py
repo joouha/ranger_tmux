@@ -102,6 +102,7 @@ def install(args):
         if args.ranger_plugin_path.exists():
             args.ranger_plugin_path.unlink()
     print("- Creating symlink at `{}`".format(args.ranger_plugin_path))
+    args.plugin_script_path.parent.mkdir(parents=True, exist_ok=True)
     args.ranger_plugin_path.symlink_to(args.plugin_script_path)
 
     if args.tmux is None:

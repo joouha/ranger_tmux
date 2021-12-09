@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "ranger_tmux"
-version = "1.0.2"
+name = "ranger-tmux"
+version = "1.0.3"
 description = "Tmux integration for ranger"
 authors = ["Josiah Outram Halstead <josiah@halstead.email>"]
 license = "MIT"
