@@ -52,7 +52,7 @@ def main():
     ).split("|")
 
     # Ranger is open - we will close it
-    if command == str(ranger_script_path):
+    if command == f"{sys.executable} {ranger_script_path}":
         # Animate close if wanted
         if animate:
             animated_resize(pane_id, 0, duration)
@@ -89,7 +89,7 @@ def main():
             "{top}",
             "-l",
             initial_size,
-            # " ".join([sys.executable, "-m", "ranger.main"]),
+            sys.executable,
             ranger_script_path,
         )
         # Animate open if wanted
