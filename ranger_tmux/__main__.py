@@ -11,9 +11,9 @@ except ImportError:
     from pathlib2 import Path
 
 try:
-    import importlib.resources as importlib_resources
-except ImportError:
     import importlib_resources
+except ImportError:
+    import importlib.resources as importlib_resources
 
 TMUX_CONFIG = [
     ["#-#-#", "start_of_ranger_tmux_config", "#-#-#"],

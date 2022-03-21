@@ -5,9 +5,9 @@ import signal
 from subprocess import CalledProcessError, check_output
 
 try:
-    import importlib.metadata as importlib_metadata
-except ImportError:
     import importlib_metadata
+except ImportError:
+    import importlib.metadata as importlib_metadata
 
 
 def get_ranger_script():
