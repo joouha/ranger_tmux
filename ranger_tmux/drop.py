@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""Performs the drop-down action in tmux.
+
+Intended to be triggered by a keyboard-shortcut in tmux.
+"""
 import signal
 import sys
 import time
@@ -22,14 +26,14 @@ def animated_resize(pane_id, target_perc, duration=200):
     lines = int(duration < 500) + 1
     frames = max(1, abs(pane_height - target_height) // lines - 1)
     timeout = duration / 1000 / frames
-    for i in range(frames):
+    for _ in range(frames):
         util.tmux("resize-pane", "-D" if direction else "-U", "-t", pane_id, lines)
         time.sleep(timeout)
     util.tmux("resize-pane", "-t", pane_id, "-y", f"{target_perc}%")
 
 
 def main():
-
+    """Launches ranger in a new pane, optionally driving pane animation."""
     ranger_script_path = util.get_ranger_script()
 
     # Initiate ranger just enough to allow us to access the settings
@@ -52,7 +56,7 @@ def main():
     ).split("|")
 
     # Ranger is open - we will close it
-    if command == f"{sys.executable} {ranger_script_path}":
+    if command == f"{sys.executable} {ranger_script_path} -- .":
         # Animate close if wanted
         if animate:
             animated_resize(pane_id, 0, duration)
@@ -91,6 +95,8 @@ def main():
             initial_size,
             sys.executable,
             ranger_script_path,
+            "--",
+            ".",
         )
         # Animate open if wanted
         if animate:
