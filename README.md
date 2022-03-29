@@ -4,10 +4,11 @@ Tmux integration for ranger
 
 ## Install
 
-To install this plugin, clone the respository into ranger's plugins folder:
+To install this plugin, clone the respository into ranger's plugins folder, or install it with pip:
 
 ```
-pip ranger-tmux
+pip install ranger-tmux
+# Then run this to install the package as a ranger plugin:
 python -m ranger_tmux install
 ```
 
