@@ -1,2 +1,3 @@
 # -*- coding: utf-8 -*-
-__version__ = "1.0.3"
+"""A tmux plugin for ranger, and ranger integration for tmux."""
+__version__ = "1.0.4"
