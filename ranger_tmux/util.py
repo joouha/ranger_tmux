@@ -68,7 +68,7 @@ def select_shell_pane(ranger_pane):
 
     # Check for a marked pane in this window
     marks = tmux("display", "-p", "-F", "#{window_flags}", "-t", ranger_pane)
-    has_marked_pane = 'M' in marks  # marks' values can be `#!~*-MZ`
+    has_marked_pane = "M" in marks  # marks' values can be `#!~*-MZ`
     if has_marked_pane:
         pane = tmux("display", "-p", "-t", "{marked}", "#{pane_id}")
         if pane in other_panes and pane != ranger_pane:
