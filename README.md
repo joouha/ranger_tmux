@@ -64,6 +64,7 @@ This plugin adds several settings to ranger:
 | Setting                   | Type  | Default | Meaning                                                                                  |
 | ------------------------- | ----- | ------- | ---------------------------------------------------------------------------------------- |
 | `tmux_cwd_sync`           | bool  | False   | When True, ranger's current directory is synced to the other pane                        |
+| `tmux_cwd_sync_now_focus` | bool  | False   | When True, the other pane will be focused after manually syncing it with ranger          |
 | `tmux_cwd_track`          | bool  | False   | When True, ranger's current directory tracks the other pane                              |
 | `tmux_cwd_track_interval` | float | 0.5     | Time between checks of the directory of the other pane when tracking                     |
 | `tmux_open_in_window`     | bool  | True    | When True, files opened with ranger will open in a new tmux window                       |
