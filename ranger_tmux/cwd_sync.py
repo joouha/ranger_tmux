@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
+"""Add options and commands for syncing panes to ranger's current working directory."""
+
 from ranger.api.commands import Command
 
 from . import util
 
 SETTINGS = {
     "tmux_cwd_sync": {"key": "s", "type": bool},
+    "tmux_cwd_sync_now_focus": {"type": bool},
 }
 
 
 class tmux_cwd_sync_now(Command):
+    """Sync working directory of the "other" pane to match ranger's."""
+
     ranger_pane = None
 
     def execute(self):
+        """Executes the command."""
         if self.ranger_pane:
             pane_id = util.select_shell_pane(self.ranger_pane)
             if pane_id:
                 util.cd_pane(self.fm.thisdir.path, pane_id)
+                if self.fm.settings.get("tmux_cwd_sync_now_focus", False):
+                    util.tmux("select-pane", "-t", pane_id)
 
 
 def tmux_cwd_sync_init(fm, setting, *args):
-    """"""
-
+    """Allows ranger to sync it's cwd to the other tmux pane."""
     fm.execute_console('map xc eval fm.execute_console("tmux_cwd_sync_now")')
 
     # Find pane with current instance of ranger in it
