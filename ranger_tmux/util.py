@@ -99,5 +99,18 @@ def cd_pane(path, pane_id):
     with pane_process.oneshot():
         if not pane_process.children():
             if pane_process.cwd() != str(path):
-                pane_process.send_signal(signal.SIGINT)
-                tmux("send-keys", "-t", pane_id, ' cd "{}"'.format(path), "Enter")
+                tmux(
+                    "send-keys",
+                    "-t",
+                    pane_id,
+                    # Move to end of input line
+                    "c-e",
+                    # Clear current line
+                    "c-u",
+                    # Change directory, with space prefix so not added to history
+                    ' cd "{}"'.format(path),
+                    # Clear the `cd` command from the screen
+                    " && echo -e '\e[1A\e[J\e[1A'",
+                    # Run the command
+                    "Enter",
+                )
