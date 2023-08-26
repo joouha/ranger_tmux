@@ -68,7 +68,7 @@ This plugin adds several settings to ranger:
 | `tmux_cwd_track`          | bool  | False   | When True, ranger's current directory tracks the other pane                              |
 | `tmux_cwd_track_interval` | float | 0.5     | Time between checks of the directory of the other pane when tracking                     |
 | `tmux_open_in_window`     | bool  | True    | When True, files opened with ranger will open in a new tmux window                       |
-| `tmux_set_title`          | bool  | True    | When True, the tumx window will be renamed to "ranger" when ranger is running            |
+| `tmux_set_title`          | bool  | True    | When True, the tmux window will be renamed to "ranger" when ranger is running            |
 | `tmux_dropdown_percent`   | int   | 60      | The height of the pane created when the drop-down tmux key-binding is installed and used |
 | `tmux_dropdown_animate`   | bool  | True    | When True, dropped-down ranger will grow / shrink when summoned                          |
 | `tmux_dropdown_duration`  | float | 100     | Drop-down animation time in miliseconds                                                  |
